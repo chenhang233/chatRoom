@@ -4,6 +4,9 @@
 #include <string.h>
 #include <iostream>
 #include <thread>
+#include <arpa/inet.h>
+
+#define IP_ARR_LEN 16
 
 using namespace std;
 

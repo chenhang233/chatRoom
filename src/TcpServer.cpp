@@ -5,8 +5,8 @@ TcpServer::TcpServer() {
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(8888);
-    bind(this->sock, (struct sockaddr *)&addr, sizeof(addr));
+   //  addr.sin_port = htons(8888);
+   //  bind(this->sock, (struct sockaddr *)&addr, sizeof(addr));
     this->addr = addr;
 }
 

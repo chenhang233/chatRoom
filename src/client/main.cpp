@@ -1,9 +1,11 @@
 #include <iostream>
+#include "client.h"
 
 using namespace std;
 
 
 
 int main() {
-    cout << "111" << endl;
+    ClientServer s;
+    s.Run();
 }

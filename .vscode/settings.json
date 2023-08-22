@@ -2,6 +2,19 @@
     "files.associations": {
         "ostream": "cpp",
         "thread": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "istream": "cpp",
+        "tuple": "cpp",
+        "chrono": "cpp",
+        "exception": "cpp",
+        "new": "cpp",
+        "ratio": "cpp",
+        "sstream": "cpp",
+        "typeinfo": "cpp",
+        "initializer_list": "cpp"
     }
 }
