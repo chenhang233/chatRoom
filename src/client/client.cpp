@@ -11,9 +11,10 @@ void handleRecv(void *p) {
     ClientServer* c = (ClientServer*)p;
     while (true)
     {
-        char* data;
-        recv(c->sock,data,BUFFER_LEN,0);
-        cout << data << endl;
+        char data[BUFFER_LEN];
+        int recv_num = recv(c->sock,data,BUFFER_LEN,0);
+        data[recv_num] = '\0';
+        cout <<"recv_data: " << data << endl;
     }
     cout << "handleRecv END" << endl;
 }

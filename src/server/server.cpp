@@ -15,6 +15,8 @@ ChatServer::~ChatServer() {
 
 void ChatServer::Run() {
     cout << "ChatServer running ..." << endl;
+    thread handle(handleMessage,this);
+    handle.detach();
     while (true)
     {
         cout << "loop ing..." << endl;
@@ -35,6 +37,7 @@ void ChatServer::Run() {
         thread th(Chat,this,client_sock);
         th.detach();
     }
+    cout << "ChatServer end ..." << endl;
 }
 
 
@@ -52,7 +55,7 @@ void Chat(void * p,int client_sock) {
     Client c;
     c.name = string(m);
     c.ack = 0; 
-    c.id = RandInt();
+    c.id = client_sock;
     while (true)
     {
         auto search = s->idMaps.find(c.id);
@@ -67,20 +70,47 @@ void Chat(void * p,int client_sock) {
     while (true)
     {        
         recv_num = recv(client_sock,message,sizeof(message),0);  
-        message[recv_num] = '\0';
-        Message next_m;
-        next_m.body = string(message);
-        next_m.name = c.name;
-        next_m.id = c.id;
-        int next_size = s->massages.size() + 1;
-        next_m.sequence = next_size;
-        s->massages.push(next_m);
+        if (recv_num > 0) {
+            message[recv_num] = '\0';
+            Message next_m;
+            next_m.body = string(message);
+            next_m.name = c.name;
+            next_m.id = c.id;
+            int next_size = s->messages.size() + 1;
+            next_m.sequence = next_size;
+            s->messages.push(next_m);
+            s->history_msgs.push(next_m);
+        }
     }
-    
+    cout << "Chat end" << endl;
 }
 
-void handleMessage(void *) {
-
+void handleMessage(void * p) {
+  cout << "handleMessage running ..." << endl;
+  ChatServer *s = (ChatServer *)p;
+  while (true)
+  {
+    while (!s->messages.empty())
+    {
+        Message m = s->messages.front();
+        s->messages.pop();
+        map<int, Client>::iterator it;
+        int send_id = 0;
+        for ( it= s->idMaps.begin(); it != s->idMaps.end(); it++)
+        {
+            auto c = it->second;
+            if (c.id != m.id) {
+                const char* str = m.body.c_str();
+                send(c.id,str,sizeof(str),0);
+            } else {
+                send_id = c.id;
+            }
+            c.ack++;
+        }
+        send(send_id,"OK",strlen("OK"),0);  
+    }
+  }
+    cout << "handleMessage end ..." << endl;
 }
 
 int RandInt() {
